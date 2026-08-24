@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: gramseva_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword123
+      POSTGRES_DB: gramseva_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gramseva_app
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://postgres:postgrespassword123@postgres:5432/gramseva_ai?schema=public"
+      JWT_SECRET: "gramseva_production_super_secret_jwt_key_2026"
+      JWT_EXPIRES_IN: "7d"
+    ports:
+      - "5000:5000"
+
+volumes:
+  pgdata:

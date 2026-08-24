@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CITIZEN
+  ADMIN
+  DEPARTMENT_OFFICER
+  SUPER_ADMIN
+}
+
+enum ComplaintStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum ComplaintCategory {
+  WATER
+  ROAD_DAMAGE
+  STREETLIGHT
+  GARBAGE
+  DRAINAGE
+  OTHER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String?     @unique
+  mobile       String      @unique
+  passwordHash String
+  role         Role        @default(CITIZEN)
+  village      String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  complaints   Complaint[] @relation("CitizenComplaints")
+  updates      ComplaintHistory[] @relation("UpdatedBy")
+}
+
+model Department {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  description String?
+  email       String?
+  createdAt   DateTime    @default(now())
+  complaints  Complaint[]
+}
+
+model Complaint {
+  id           String            @id @default(cuid())
+  complaintId  String            @unique
+  citizenId    String
+  citizen      User              @relation("CitizenComplaints", fields: [citizenId], references: [id], onDelete: Cascade)
+  category     ComplaintCategory
+  description  String            @db.Text
+  village      String
+  location     String
+  latitude     Float?
+  longitude    Float?
+  priority     Priority          @default(MEDIUM)
+  sentiment    String            @default("Neutral")
+  departmentId String?
+  department   Department?       @relation(fields: [departmentId], references: [id])
+  status       ComplaintStatus   @default(OPEN)
+  imageUrl     String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  resolvedAt   DateTime?
+  history      ComplaintHistory[]
+
+  @@index([status])
+  @@index([category])
+  @@index([village])
+  @@index([createdAt])
+}
+
+model ComplaintHistory {
+  id          String          @id @default(cuid())
+  complaintId String
+  complaint   Complaint       @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  status      ComplaintStatus
+  note        String?
+  updatedById String?
+  updatedBy   User?           @relation("UpdatedBy", fields: [updatedById], references: [id])
+  createdAt   DateTime        @default(now())
+
+  @@index([complaintId])
+}

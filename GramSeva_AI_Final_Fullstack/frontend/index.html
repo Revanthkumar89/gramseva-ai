@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="GramSeva AI - Smart Village Civic Issue Reporting & Governance Platform">
+<meta name="theme-color" content="#166534">
+<title>GramSeva AI | Smart Village Issue Reporting & Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #166534;
+  --primary-hover: #14532d;
+  --primary-light: #edf7ef;
+  --primary-border: #bbf7c8;
+  --accent: #f59e0b;
+  --accent-light: #fffbeb;
+  --bg: #f8faf9;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --success: #16a34a;
+  --success-light: #f0fdf4;
+  --info: #0284c7;
+  --info-light: #f0f9ff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg: 0 12px 30px -4px rgba(20,60,35,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+h1, h2, h3, h4, .brand {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 12px; top: 12px; z-index: 999; background: #fff; padding: 10px; border-radius: 8px; }
+
+/* Header */
+.top {
+  height: 72px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 4%;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.brand {
+  font-weight: 800;
+  font-size: 22px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+}
+.brand b { color: var(--primary); }
+nav { display: flex; gap: 4px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+nav button {
+  border: 0;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+nav button:hover, nav button.active {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid #bbf7d0;
+  white-space: nowrap;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* Buttons */
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 18px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(22,101,52,0.2); }
+.primary:hover { background: var(--primary-hover); }
+.secondary { background: #fff; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+.secondary:hover { background: #f8fafc; border-color: #cbd5e1; }
+.danger { background: var(--danger-light); color: var(--danger); border: 1px solid #fecaca; }
+.danger:hover { background: #fee2e2; }
+.linkbtn { border: 0; background: transparent; padding: 6px 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: 6px; }
+.linkbtn:hover { color: var(--text); background: #f1f5f9; }
+
+/* Pages */
+.page { display: none; min-height: calc(100vh - 140px); }
+.page.active { display: block; animation: fadeIn 0.2s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.wrap { max-width: 1240px; margin: auto; padding: 40px 4%; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #eaf7ed 0%, #f5fbf6 50%, #fff7e8 100%);
+  padding: 70px 4% 80px;
+  border-bottom: 1px solid #e0ede2;
+}
+.heroIn {
+  max-width: 1240px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.08; margin: 8px 0 16px; font-weight: 800; }
+h2 { font-size: 26px; font-weight: 800; margin-bottom: 16px; }
+h3 { font-size: 18px; font-weight: 700; }
+.lead { font-size: 17px; color: var(--text-muted); line-height: 1.6; max-width: 620px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+/* Cards & Layout */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+.grid { display: grid; gap: 18px; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+.stat b { display: block; font-size: 34px; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif; }
+.stat small { color: var(--text-muted); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.category { cursor: pointer; transition: all 0.2s ease; border: 1px solid var(--border); }
+.category:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow-md); }
+.category .ico {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* Forms */
+.form { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 28px; box-shadow: var(--shadow-sm); }
+.formGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.full { grid-column: 1 / -1; }
+.field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.req { color: var(--danger); }
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(22,101,52,0.15);
+}
+textarea { min-height: 120px; resize: vertical; }
+.hint { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+.muted { color: var(--text-muted); font-size: 14px; }
+
+/* AI Box */
+.aiBox {
+  margin-top: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #edf7ef 100%);
+  border: 1px solid var(--primary-border);
+  border-radius: 16px;
+}
+.aiHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.aiBadge {
+  background: var(--primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.aiGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.aiMetric {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.aiMetric small { display: block; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.aiMetric b { font-size: 15px; color: var(--text); display: block; margin-top: 2px; }
+
+/* Notices & Badges */
+.notice { padding: 14px 18px; border-radius: 12px; margin-top: 16px; font-size: 14px; }
+.success { background: var(--success-light); color: #15803d; border: 1px solid #bbf7d0; }
+.error { background: var(--danger-light); color: var(--danger); border: 1px solid #fecaca; }
+.info { background: var(--info-light); color: var(--info); border: 1px solid #bae6fd; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; }
+.Open, .OPEN { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.InProgress, .IN_PROGRESS { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.Resolved, .RESOLVED { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.CRITICAL, .Critical { background: #fef2f2; color: #b91c1c; font-weight: 800; }
+.HIGH, .High { background: #fff7ed; color: #c2410c; }
+.MEDIUM, .Medium { background: #eff6ff; color: #1d4ed8; }
+.LOW, .Low { background: #f1f5f9; color: #475569; }
+
+/* Controls & Filters */
+.toolbar, .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.toolbar { justify-content: space-between; }
+.filters input, .filters select { width: auto; min-width: 170px; }
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+  background: #fff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 18px;
+  color: var(--text-muted);
+}
+.empty b { color: var(--text); font-size: 16px; display: block; margin-bottom: 6px; }
+
+/* Table */
+.tableWrap { overflow-x: auto; background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-sm); }
+.table { border-collapse: collapse; width: 100%; min-width: 960px; }
+.table th, .table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+.table th { background: #f8fafc; color: var(--text-muted); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.table tr:hover td { background: #f8fafc; }
+
+/* Timeline */
+.timeline { margin-top: 20px; border-left: 2px solid #cbd5e1; padding-left: 18px; margin-left: 8px; }
+.event { position: relative; padding-bottom: 20px; }
+.event::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+.event b { color: var(--text); font-size: 14px; display: block; }
+.event p { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+
+/* Map Simulation */
+.map {
+  height: 280px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 60%, #e0f2fe 100%);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zone {
+  position: absolute;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.z1 { width: 120px; height: 120px; background: rgba(220, 38, 38, 0.75); top: 20%; left: 20%; }
+.z2 { width: 90px; height: 90px; background: rgba(245, 158, 11, 0.75); top: 45%; left: 55%; }
+.z3 { width: 75px; height: 75px; background: rgba(22, 163, 74, 0.75); top: 15%; left: 75%; }
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 60;
+  padding: 20px;
+}
+.modal.show { display: grid; place-items: center; }
+.modalBox {
+  background: #fff;
+  width: min(540px, 100%);
+  border-radius: 20px;
+  padding: 28px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+}
+.modalHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
+.check input { width: auto; margin-top: 3px; }
+
+/* Auth tabs */
+.authTabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.authTabs button {
+  border: 0;
+  background: transparent;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.authTabs button.active {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+footer {
+  margin-top: auto;
+  padding: 24px 4%;
+  text-align: center;
+  background: #0f172a;
+  color: #94a3b8;
+  font-size: 13px;
+  border-top: 1px solid #1e293b;
+}
+
+@media(max-width: 900px) {
+  .heroIn, .g4, .g3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width: 650px) {
+  .top { padding: 0 3%; }
+  .hero, .wrap { padding-left: 4%; padding-right: 4%; }
+  .heroIn, .g4, .g3, .g2, .formGrid, .aiGrid { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+  .desktopAction { display: none; }
+  h1 { font-size: 36px; }
+  .filters input, .filters select { width: 100%; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="brand" onclick="showPage('home')">
+    <div class="brand-icon">GS</div>
+    GramSeva <b>AI</b>
+  </div>
+  <nav id="nav" aria-label="Primary navigation"></nav>
+  <div class="header-actions">
+    <div class="status-indicator" id="backendStatus">
+      <span class="status-dot"></span> PostgreSQL Active
+    </div>
+    <div id="userProfileArea">
+      <button class="btn secondary" onclick="openAuthModal('login')">Sign In</button>
+    </div>
+    <button class="btn primary desktopAction" data-page="report">Report Issue</button>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Home Page -->
+  <section id="home" class="page active">
+    <div class="hero">
+      <div class="heroIn">
+        <div>
+          <div class="eyebrow">Smart Village Civic Governance</div>
+          <h1>Better reporting.<br><span style="color:var(--primary)">Faster resolution.</span></h1>
+          <p class="lead">A connected digital platform empowering citizens to report water, road damage, streetlights, garbage and drainage issues with rule-based AI classification, live tracking, and admin workflows.</p>
+          <div class="actions">
+            <button class="btn primary" data-page="report">Report a Problem</button>
+            <button class="btn secondary" data-page="track">Track Complaint</button>
+            <button class="btn secondary" data-page="issues">Public Issues</button>
+          </div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--primary);">
+          <div class="eyebrow">Database Status</div>
+          <h2>Connected to PostgreSQL</h2>
+          <p class="muted">Real PostgreSQL database storage with Prisma ORM. Live complaints submitted by citizens are securely stored and synced across all modules.</p>
+          <div class="grid g2" style="margin-top: 20px;">
+            <div class="stat"><small>Total Complaints</small><b id="homeTotal">0</b></div>
+            <div class="stat"><small>Resolved Issues</small><b id="homeResolved">0</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap">
+      <h2>Report village issues in seconds</h2>
+      <div class="grid g4">
+        <div class="card category" onclick="quickCategory('WATER')"><div class="ico">🚰</div><h3>Water Supply</h3><p class="muted">Supply, pipe leakages & water quality issues.</p></div>
+        <div class="card category" onclick="quickCategory('ROAD_DAMAGE')"><div class="ico">🛣️</div><h3>Road Damage</h3><p class="muted">Potholes, broken asphalt & cave-ins.</p></div>
+        <div class="card category" onclick="quickCategory('STREETLIGHT')"><div class="ico">💡</div><h3>Streetlights</h3><p class="muted">Dark zones, broken poles & non-working lights.</p></div>
+        <div class="card category" onclick="quickCategory('GARBAGE')"><div class="ico">🗑️</div><h3>Garbage & Waste</h3><p class="muted">Uncollected garbage, open dumping & sanitation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report Complaint Page -->
+  <section id="report" class="page">
+    <div class="wrap">
+      <div class="eyebrow">Citizen Portal</div>
+      <h2>Report a village issue</h2>
+      <form class="form" id="complaintForm" novalidate>
+        <div id="authNotice" class="notice info" style="margin-top:0; margin-bottom: 20px; display:none;">
+          <b>Note:</b> You are submitting as citizen <span id="authCitizenName" style="font-weight:700"></span>.
+        </div>
+        <div class="formGrid">
+          <div class="field"><label>Full Name <span class="req">*</span></label><input id="citizenName" required maxlength="80" autocomplete="name" placeholder="E.g. Ramesh Kumar"></div>
+          <div class="field"><label>Mobile Number <span class="req">*</span></label><input id="mobile" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number"></div>
+          <div class="field"><label>Village / Gram Panchayat <span class="req">*</span></label><input id="village" required maxlength="100" placeholder="E.g. Rampur"></div>
+          <div class="field">
+            <label>Category <span class="req">*</span></label>
+            <select id="category" required onchange="analyzeComplaint()">
+              <option value="">Select Category</option>
+              <option value="WATER">Water Supply</option>
+              <option value="ROAD_DAMAGE">Road Damage</option>
+              <option value="STREETLIGHT">Streetlight</option>
+              <option value="GARBAGE">Garbage & Sanitation</option>
+              <option value="DRAINAGE">Drainage & Sewage</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Location / Landmark <span class="req">*</span></label>
+            <input id="location" required maxlength="150" placeholder="E.g. Near Bus Stand, Main Road" oninput="analyzeComplaint()">
+            <div class="actions" style="margin-top:8px;">
+              <button type="button" class="btn secondary" onclick="getGPS()" style="padding: 8px 14px; font-size:13px;">📍 Use Device GPS</button>
+              <span id="gpsStatus" class="hint"></span>
+            </div>
+          </div>
+          <div class="field full">
+            <label>Problem Description <span class="req">*</span></label>
+            <textarea id="description" required maxlength="1000" placeholder="Describe the issue in detail (e.g. Broken water pipe leaking near the main temple since 2 days, causing road flood)." oninput="analyzeComplaint()"></textarea>
+            <div class="hint"><span id="charCount">0</span>/1000 characters</div>
+          </div>
+          <div class="full check">
+            <input type="checkbox" id="consent" required checked>
+            <label for="consent">I confirm that this civic issue report is genuine and accurate. <span class="req">*</span></label>
+          </div>
+        </div>
+
+        <div class="aiBox">
+          <div class="aiHeader">
+            <b>Smart AI Engine Insights</b>
+            <span class="aiBadge">Live Analysis</span>
+          </div>
+          <div class="aiGrid">
+            <div class="aiMetric"><small>Detected Category</small><b id="aiCategory">Waiting</b></div>
+            <div class="aiMetric"><small>Urgency / Priority</small><b id="aiPriority">Medium</b></div>
+            <div class="aiMetric"><small>Citizen Sentiment</small><b id="aiSentiment">Neutral</b></div>
+            <div class="aiMetric"><small>Assigned Department</small><b id="aiDepartment">General Admin</b></div>
+          </div>
+          <p id="duplicateWarning" class="hint" style="color: var(--danger); font-weight: 600; margin-top: 10px;"></p>
+        </div>
+
+        <div class="actions" style="margin-top:24px;">
+          <button class="btn primary" type="submit" id="submitBtn">🚀 Submit Complaint</button>
+          <button class="btn secondary" type="button" onclick="resetComplaintForm()">Clear Form</button>
+        </div>
+        <div id="formMessage" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Track Complaint Page -->
+  <section id="track" class="page">
+    <div class="wrap">
+      <div class="eyebrow">Complaint Tracking</div>
+      <h2>Track Complaint Status</h2>
+      <div class="form">
+        <div class="toolbar">
+          <input id="trackInput" placeholder="Enter Complaint ID (e.g. GS-2026-ABC123)" aria-label="Complaint ID" style="max-width: 420px;">
+          <button class="btn primary" onclick="trackComplaint()">🔍 Track Status</button>
+        </div>
+        <div id="trackResult" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Public Issue Board -->
+  <section id="issues" class="page">
+    <div class="wrap">
+      <div class="toolbar">
+        <div>
+          <div class="eyebrow">Community Transparency</div>
+          <h2>Public Issue Board</h2>
+        </div>
+        <button class="btn secondary" onclick="refreshPublic()">🔄 Refresh</button>
+      </div>
+      <div class="filters" style="margin-top: 16px;">
+        <input id="issueSearch" placeholder="Search village, location, or problem..." oninput="renderIssues()">
+        <select id="issueStatus" onchange="renderIssues()">
+          <option value="">All Statuses</option>
+          <option value="OPEN">Open</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="RESOLVED">Resolved</option>
+        </select>
+        <select id="issueCategory" onchange="renderIssues()">
+          <option value="">All Categories</option>
+          <option value="WATER">Water Supply</option>
+          <option value="ROAD_DAMAGE">Road Damage</option>
+          <option value="STREETLIGHT">Streetlight</option>
+          <option value="GARBAGE">Garbage & Sanitation</option>
+          <option value="DRAINAGE">Drainage & Sewage</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </div>
+      <div id="issuesGrid" class="grid g3" style="margin-top:24px"></div>
+    </div>
+  </section>
+
+  <!-- Analytics Dashboard -->
+  <section id="analytics" class="page">
+    <div class="wrap">
+      <div class="eyebrow">Civic Intelligence Dashboard</div>
+      <h2>Village Resolution Analytics</h2>
+      <div class="grid g4" style="margin-top: 16px;">
+        <div class="card stat"><small>Total Complaints</small><b id="kTotal">0</b></div>
+        <div class="card stat"><small>Open Issues</small><b id="kOpen">0</b></div>
+        <div class="card stat"><small>Resolution Rate</small><b id="kRate">0%</b></div>
+        <div class="card stat"><small>Top Category</small><b id="kTop" style="font-size:22px">No Data</b></div>
+      </div>
+      <div class="grid g2" style="margin-top: 20px;">
+        <div class="card">
+          <h3>AI Operational Insights</h3>
+          <p id="insight" class="muted" style="margin-top: 8px;">Analysis of complaints will show key trends, department workloads and resolution hotspots.</p>
+        </div>
+        <div class="card">
+          <h3>Average Resolution Speed</h3>
+          <b id="avgTime" style="font-size:28px;color:var(--primary);margin-top: 4px;display:block;">No data yet</b>
+          <p class="muted">Computed directly from resolution timestamp logs in PostgreSQL.</p>
+        </div>
+      </div>
+      <h3 style="margin-top:32px; margin-bottom: 12px;">Area-wise Issue Density Map (Simulation)</h3>
+      <div class="map" aria-label="Issue concentration heatmap">
+        <div class="zone z1">High Density</div>
+        <div class="zone z2">Moderate</div>
+        <div class="zone z3">Normal</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Console -->
+  <section id="admin" class="page">
+    <div class="wrap">
+      <div class="toolbar">
+        <div>
+          <div class="eyebrow">Officer & Admin Console</div>
+          <h2>Civic Complaint Management</h2>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" onclick="loadAdminData()">🔄 Sync DB</button>
+          <button class="btn secondary" onclick="exportData()">💾 Export JSON</button>
+        </div>
+      </div>
+
+      <div id="adminAuthBanner" class="notice info" style="display:none; margin-top: 16px;">
+        <b>Logged in as:</b> <span id="adminNameDisplay"></span> (<span id="adminRoleDisplay"></span>)
+        <button class="linkbtn" onclick="logout()" style="color:var(--danger); margin-left: 10px;">Sign Out</button>
+      </div>
+
+      <div class="filters" style="margin-top:20px">
+        <input id="adminSearch" placeholder="Search ID, village, or description..." oninput="renderAdmin()">
+        <select id="adminStatus" onchange="renderAdmin()">
+          <option value="">All Statuses</option>
+          <option value="OPEN">Open</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="RESOLVED">Resolved</option>
+        </select>
+      </div>
+
+      <div class="tableWrap" style="margin-top:20px">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Complaint ID</th>
+              <th>Category</th>
+              <th>Village & Location</th>
+              <th>Priority</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Details Modal -->
+<div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modalBox">
+    <div class="modalHeader">
+      <h3 id="modalTitle">Complaint Details</h3>
+      <button class="linkbtn" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Auth Modal (Login / Register) -->
+<div id="authModal" class="modal" role="dialog" aria-modal="true">
+  <div class="modalBox">
+    <div class="modalHeader">
+      <h3 id="authModalTitle">Sign In to GramSeva AI</h3>
+      <button class="linkbtn" onclick="closeAuthModal()">✕ Close</button>
+    </div>
+    <div class="authTabs">
+      <button type="button" id="tabLogin" class="active" onclick="switchAuthTab('login')">Sign In</button>
+      <button type="button" id="tabRegister" onclick="switchAuthTab('register')">New Citizen Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="field" style="margin-bottom: 14px;">
+        <label>10-digit Mobile Number <span class="req">*</span></label>
+        <input id="loginMobile" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="E.g. 9876543210">
+      </div>
+      <div class="field" style="margin-bottom: 16px;">
+        <label>Password <span class="req">*</span></label>
+        <input id="loginPassword" type="password" required placeholder="Enter password">
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn primary" style="width: 100%;">Sign In</button>
+      </div>
+      <div style="margin-top: 14px; text-align: center;">
+        <button type="button" class="linkbtn" style="color:var(--primary); font-size:12px;" onclick="fillAdminCredentials()">⚡ Quick-fill Admin Credentials (9876543210 / Admin123)</button>
+      </div>
+      <div id="loginMessage"></div>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
+      <div class="field" style="margin-bottom: 12px;">
+        <label>Full Name <span class="req">*</span></label>
+        <input id="regName" required maxlength="80" placeholder="E.g. Ramesh Kumar">
+      </div>
+      <div class="field" style="margin-bottom: 12px;">
+        <label>Mobile Number <span class="req">*</span></label>
+        <input id="regMobile" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number">
+      </div>
+      <div class="field" style="margin-bottom: 12px;">
+        <label>Village / Gram Panchayat <span class="req">*</span></label>
+        <input id="regVillage" required maxlength="100" placeholder="E.g. Rampur">
+      </div>
+      <div class="field" style="margin-bottom: 16px;">
+        <label>Password (min 6 chars) <span class="req">*</span></label>
+        <input id="regPassword" type="password" required minlength="6" placeholder="Choose a secure password">
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn primary" style="width: 100%;">Create Citizen Account</button>
+      </div>
+      <div id="registerMessage"></div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  GramSeva AI · Smart Village Issue Reporting & Governance · Connected to PostgreSQL Backend (Port 5000)
+</footer>
+
+<script>
+"use strict";
+const API_URL = (window.location.origin.includes(":5500") || window.location.origin.includes(":3000"))
+  ? "http://localhost:5000/api"
+  : "/api";
+const YEAR = new Date().getFullYear();
+
+const STORAGE_KEY = "gramseva_ai_production";
+
+let token = localStorage.getItem("gramseva_token") || "";
+let currentUser = null;
+try {
+  currentUser = JSON.parse(localStorage.getItem("gramseva_user") || "null");
+} catch(e) { currentUser = null; }
+
+let publicComplaints = [];
+let adminComplaints = [];
+let departmentsList = [];
+
+// Navigation Setup
+const pageNames = {
+  home: "Home",
+  report: "Report Issue",
+  track: "Track",
+  issues: "Public Issues",
+  analytics: "Analytics",
+  admin: "Admin Console"
+};
+
+const nav = document.getElementById("nav");
+Object.keys(pageNames).forEach(p => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = pageNames[p];
+  b.dataset.page = p;
+  nav.appendChild(b);
+});
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-page]");
+  if (b) showPage(b.dataset.page);
+});
+
+function showPage(p) {
+  document.querySelectorAll(".page").forEach(x => x.classList.toggle("active", x.id === p));
+  document.querySelectorAll("[data-page]").forEach(x => x.classList.toggle("active", x.dataset.page === p));
+  
+  if (p === "issues") renderIssues();
+  if (p === "analytics") loadAnalytics();
+  if (p === "admin") {
+    if (!token) {
+      openAuthModal("login");
+    } else {
+      loadAdminData();
+    }
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// API Helper
+async function api(path, opt = {}) {
+  let headers = opt.headers || {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  
+  let r = await fetch(API_URL + path, { ...opt, headers });
+  let d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.message || "Request failed");
+  return d;
+}
+
+// Check Backend Health
+async function checkBackendHealth() {
+  try {
+    const res = await api("/health");
+    if (res.status === "ok" && res.database === "connected") {
+      document.getElementById("backendStatus").innerHTML = '<span class="status-dot"></span> PostgreSQL Active';
+      document.getElementById("backendStatus").style.color = "var(--success)";
+    }
+  } catch(e) {
+    document.getElementById("backendStatus").innerHTML = '⚠️ Offline Mode';
+    document.getElementById("backendStatus").style.color = "var(--danger)";
+  }
+}
+
+// Auth Management
+function updateAuthUI() {
+  const area = document.getElementById("userProfileArea");
+  const authNotice = document.getElementById("authNotice");
+  const adminBanner = document.getElementById("adminAuthBanner");
+  
+  if (currentUser && token) {
+    area.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:13px;font-weight:700;color:var(--primary);">👤 ${esc(currentUser.name)}</span>
+        <button class="linkbtn" onclick="logout()" style="color:var(--danger);font-size:12px;">Sign Out</button>
+      </div>
+    `;
+    if (authNotice) {
+      authNotice.style.display = "block";
+      document.getElementById("authCitizenName").textContent = `${currentUser.name} (${currentUser.mobile})`;
+      document.getElementById("citizenName").value = currentUser.name || "";
+      document.getElementById("mobile").value = currentUser.mobile || "";
+      if (currentUser.village) document.getElementById("village").value = currentUser.village;
+    }
+    if (adminBanner && (currentUser.role === "ADMIN" || currentUser.role === "SUPER_ADMIN" || currentUser.role === "DEPARTMENT_OFFICER")) {
+      adminBanner.style.display = "block";
+      document.getElementById("adminNameDisplay").textContent = currentUser.name;
+      document.getElementById("adminRoleDisplay").textContent = currentUser.role;
+    }
+  } else {
+    area.innerHTML = `<button class="btn secondary" onclick="openAuthModal('login')">Sign In</button>`;
+    if (authNotice) authNotice.style.display = "none";
+    if (adminBanner) adminBanner.style.display = "none";
+  }
+}
+
+function openAuthModal(tab = "login") {
+  document.getElementById("authModal").classList.add("show");
+  switchAuthTab(tab);
+}
+
+function closeAuthModal() {
+  document.getElementById("authModal").classList.remove("show");
+}
+
+function switchAuthTab(tab) {
+  const isLogin = tab === "login";
+  document.getElementById("tabLogin").classList.toggle("active", isLogin);
+  document.getElementById("tabRegister").classList.toggle("active", !isLogin);
+  document.getElementById("loginForm").style.display = isLogin ? "block" : "none";
+  document.getElementById("registerForm").style.display = isLogin ? "none" : "block";
+  document.getElementById("authModalTitle").textContent = isLogin ? "Sign In to GramSeva AI" : "Create Citizen Account";
+}
+
+function fillAdminCredentials() {
+  document.getElementById("loginMobile").value = "9876543210";
+  document.getElementById("loginPassword").value = "Admin123";
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+  const mobile = document.getElementById("loginMobile").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const msg = document.getElementById("loginMessage");
+  msg.innerHTML = '<div class="notice info">Signing in...</div>';
+  
+  try {
+    const res = await api("/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mobile, password })
+    });
+    token = res.token;
+    currentUser = res.user;
+    localStorage.setItem("gramseva_token", token);
+    localStorage.setItem("gramseva_user", JSON.stringify(currentUser));
+    msg.innerHTML = '<div class="notice success">Sign in successful!</div>';
+    updateAuthUI();
+    setTimeout(() => {
+      closeAuthModal();
+      msg.innerHTML = "";
+      if (currentUser.role === "ADMIN" || currentUser.role === "SUPER_ADMIN") {
+        showPage("admin");
+      }
+    }, 600);
+  } catch(err) {
+    msg.innerHTML = `<div class="notice error">${esc(err.message)}</div>`;
+  }
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById("regName").value.trim();
+  const mobile = document.getElementById("regMobile").value.trim();
+  const village = document.getElementById("regVillage").value.trim();
+  const password = document.getElementById("regPassword").value;
+  const msg = document.getElementById("registerMessage");
+  msg.innerHTML = '<div class="notice info">Creating account...</div>';
+  
+  try {
+    await api("/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, mobile, village, password })
+    });
+    // Auto login
+    const loginRes = await api("/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mobile, password })
+    });
+    token = loginRes.token;
+    currentUser = loginRes.user;
+    localStorage.setItem("gramseva_token", token);
+    localStorage.setItem("gramseva_user", JSON.stringify(currentUser));
+    msg.innerHTML = '<div class="notice success">Account created and signed in!</div>';
+    updateAuthUI();
+    setTimeout(() => {
+      closeAuthModal();
+      msg.innerHTML = "";
+    }, 600);
+  } catch(err) {
+    msg.innerHTML = `<div class="notice error">${esc(err.message)}</div>`;
+  }
+}
+
+function logout() {
+  token = "";
+  currentUser = null;
+  localStorage.removeItem("gramseva_token");
+  localStorage.removeItem("gramseva_user");
+  updateAuthUI();
+  showPage("home");
+}
+
+// Complaint Submission
+function quickCategory(c) {
+  showPage("report");
+  document.getElementById("category").value = c;
+  analyzeComplaint();
+}
+
+function analyzeComplaint() {
+  const d = (document.getElementById("description").value || "").toLowerCase();
+  const selected = document.getElementById("category").value;
+  document.getElementById("charCount").textContent = d.length;
+  
+  let cat = selected || "OTHER";
+  let priority = "MEDIUM";
+  let sentiment = "Neutral";
+  let department = "General Administration";
+  
+  const rules = [
+    [["water", "leak", "pipe", "tap", "borewell"], "WATER", "Water & Sanitation"],
+    [["road", "pothole", "tar", "asphalt", "bridge"], "ROAD_DAMAGE", "Roads & Infrastructure"],
+    [["streetlight", "light", "dark", "lamp", "pole", "wire"], "STREETLIGHT", "Electrical Maintenance"],
+    [["garbage", "waste", "dump", "trash", "sanitation"], "GARBAGE", "Sanitation"],
+    [["drain", "drainage", "sewage", "gutter", "overflow"], "DRAINAGE", "Drainage & Public Works"]
+  ];
+  
+  for (const [words, c, dept] of rules) {
+    if (words.some(w => d.includes(w))) {
+      cat = c;
+      department = dept;
+      break;
+    }
+  }
+  
+  const catNames = {
+    WATER: "Water Supply",
+    ROAD_DAMAGE: "Road Damage",
+    STREETLIGHT: "Streetlight",
+    GARBAGE: "Garbage & Sanitation",
+    DRAINAGE: "Drainage & Sewage",
+    OTHER: "General Admin"
+  };
+  
+  if (/\b(accident|emergency|danger|fire|collapse|hazard|electrocution)\b/.test(d)) priority = "CRITICAL";
+  else if (/\b(urgent|flood|severe|major|unsafe|blocked)\b/.test(d)) priority = "HIGH";
+  else if (/\b(minor|small|routine)\b/.test(d)) priority = "LOW";
+  
+  if (/\b(angry|worst|frustrated|unacceptable|months|ignored|terrible)\b/.test(d)) sentiment = "Negative";
+  else if (/\b(thanks|good|resolved|appreciate|helpful)\b/.test(d)) sentiment = "Positive";
+  
+  document.getElementById("aiCategory").textContent = catNames[cat] || cat;
+  document.getElementById("aiPriority").textContent = priority;
+  document.getElementById("aiSentiment").textContent = sentiment;
+  document.getElementById("aiDepartment").textContent = department;
+}
+
+document.getElementById("complaintForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const name = document.getElementById("citizenName").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const village = document.getElementById("village").value.trim();
+  const location = document.getElementById("location").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const category = document.getElementById("category").value;
+  const consent = document.getElementById("consent").checked;
+  const msg = document.getElementById("formMessage");
+  
+  if (!name || !village || !location || !description || !category || !consent || !/^\d{10}$/.test(mobile)) {
+    msg.innerHTML = '<div class="notice error">Please complete all required fields, enter a valid 10-digit mobile number, and check the consent box.</div>';
+    return;
+  }
+
+  // If user is not logged in, auto-register/login citizen in background
+  if (!token) {
+    try {
+      msg.innerHTML = '<div class="notice info">Creating citizen session...</div>';
+      // Try to register citizen with default password or login
+      try {
+        await api("/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, mobile, village, password: `Citizen@${mobile.slice(-4)}` })
+        });
+      } catch(e) {}
+      
+      const authRes = await api("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile, password: `Citizen@${mobile.slice(-4)}` })
+      });
+      token = authRes.token;
+      currentUser = authRes.user;
+      localStorage.setItem("gramseva_token", token);
+      localStorage.setItem("gramseva_user", JSON.stringify(currentUser));
+      updateAuthUI();
+    } catch(err) {
+      msg.innerHTML = `<div class="notice error">Please sign in first: ${esc(err.message)}</div>`;
+      openAuthModal("login");
+      return;
+    }
+  }
+
+  try {
+    msg.innerHTML = '<div class="notice info">Submitting complaint to PostgreSQL...</div>';
+    const res = await api("/complaints", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        category: category || "OTHER",
+        description,
+        village,
+        location
+      })
+    });
+    
+    const realId = res.complaint.complaintId;
+    const dupNotice = res.duplicateWarning ? `<br><small style="color:var(--accent); font-weight:700">⚠️ ${esc(res.duplicateWarning)}</small>` : "";
+    
+    msg.innerHTML = `
+      <div class="notice success">
+        <b>Complaint submitted successfully!</b><br>
+        Your Complaint ID is <b>${realId}</b>. You can track its live resolution anytime.${dupNotice}
+      </div>
+    `;
+    
+    await refreshPublic();
+    document.getElementById("trackInput").value = realId;
+    resetComplaintForm(false);
+  } catch(err) {
+    msg.innerHTML = `<div class="notice error">${esc(err.message)}</div>`;
+  }
+});
+
+function resetComplaintForm(clearMessage = true) {
+  document.getElementById("complaintForm").reset();
+  document.getElementById("charCount").textContent = "0";
+  document.getElementById("aiCategory").textContent = "Waiting";
+  document.getElementById("aiPriority").textContent = "Medium";
+  document.getElementById("aiSentiment").textContent = "Neutral";
+  document.getElementById("aiDepartment").textContent = "General Admin";
+  document.getElementById("duplicateWarning").textContent = "";
+  if (clearMessage) document.getElementById("formMessage").innerHTML = "";
+  if (currentUser) {
+    document.getElementById("citizenName").value = currentUser.name || "";
+    document.getElementById("mobile").value = currentUser.mobile || "";
+    if (currentUser.village) document.getElementById("village").value = currentUser.village;
+  }
+}
+
+function getGPS() {
+  const s = document.getElementById("gpsStatus");
+  if (!navigator.geolocation) {
+    s.textContent = "Geolocation not supported.";
+    return;
+  }
+  s.textContent = "Fetching GPS coordinates...";
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      document.getElementById("location").value = `GPS ${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
+      s.textContent = "✓ Location detected.";
+      analyzeComplaint();
+    },
+    () => { s.textContent = "GPS access denied or unavailable."; },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+// Track Complaint
+async function trackComplaint() {
+  const id = (document.getElementById("trackInput").value || "").trim().toUpperCase();
+  const r = document.getElementById("trackResult");
+  if (!id) {
+    r.innerHTML = '<div class="notice error">Please enter a complaint ID.</div>';
+    return;
+  }
+  r.innerHTML = '<div class="notice info">Looking up complaint in PostgreSQL...</div>';
+  
+  try {
+    const res = await api(`/complaints/${id}`);
+    const c = res.complaint;
+    
+    r.innerHTML = `
+      <div class="card" style="margin-top:20px; border-left: 4px solid var(--primary);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <span class="badge ${esc(c.status)}">${esc(c.status.replace("_", " "))}</span>
+            <span class="badge ${esc(c.priority)}" style="margin-left:6px;">Priority: ${esc(c.priority)}</span>
+            <h3 style="margin-top:10px; font-size:20px;">${esc(c.category.replace("_", " "))}</h3>
+          </div>
+          <b style="font-family:monospace; font-size:16px; color:var(--primary);">${esc(c.complaintId)}</b>
+        </div>
+        <p style="margin-top:10px; color:var(--text);">
+          <b>Village:</b> ${esc(c.village)} · <b>Location:</b> ${esc(c.location)}<br>
+          <b>Department:</b> ${esc(c.department ? c.department.name : "General Administration")}<br>
+          <b>Description:</b> ${esc(c.description)}
+        </p>
+        <h4 style="margin-top:20px; font-size:14px; text-transform:uppercase; color:var(--text-muted);">Status History</h4>
+        <div class="timeline">
+          ${(c.history || []).map(h => `
+            <div class="event">
+              <b>${esc(h.status.replace("_", " "))}</b>
+              <p>${esc(h.note || "Status updated")} · ${new Date(h.createdAt).toLocaleString()}</p>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  } catch(err) {
+    r.innerHTML = `<div class="empty" style="margin-top:20px;"><b>No complaint found</b>Check the ID (${esc(id)}) and try again.</div>`;
+  }
+}
+
+// Public Issues
+async function refreshPublic() {
+  try {
+    const d = await api("/public/issues");
+    publicComplaints = d.complaints || [];
+    renderIssues();
+    renderHomeStats();
+  } catch(e) {}
+}
+
+function renderIssues() {
+  const q = (document.getElementById("issueSearch").value || "").toLowerCase();
+  const s = document.getElementById("issueStatus").value;
+  const cat = document.getElementById("issueCategory").value;
+  
+  const filtered = publicComplaints.filter(c => {
+    const matchesQ = !q || [c.complaintId, c.village, c.location, c.description, c.category].join(" ").toLowerCase().includes(q);
+    const matchesS = !s || c.status === s;
+    const matchesCat = !cat || c.category === cat;
+    return matchesQ && matchesS && matchesCat;
+  });
+  
+  const el = document.getElementById("issuesGrid");
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty full"><b>No public issues match your filters</b>Try adjusting your search or category filter.</div>';
+    return;
+  }
+  
+  el.innerHTML = filtered.map(c => `
+    <article class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span class="badge ${esc(c.status)}">${esc(c.status.replace("_", " "))}</span>
+        <small style="font-family:monospace; font-weight:700; color:var(--text-muted);">${esc(c.complaintId)}</small>
+      </div>
+      <h3 style="margin-top:6px;">${esc(c.category.replace("_", " "))}</h3>
+      <p class="muted" style="font-size:13px; margin:4px 0 10px;">📍 ${esc(c.location)}, ${esc(c.village)}</p>
+      <p style="font-size:14px; line-height:1.5;">${esc(c.description.slice(0, 160))}${c.description.length > 160 ? "..." : ""}</p>
+      <button class="btn secondary" style="margin-top:14px; width:100%; font-size:13px; padding:8px;" onclick="openTrack('${c.complaintId}')">Track Timeline</button>
+    </article>
+  `).join("");
+}
+
+function openTrack(id) {
+  document.getElementById("trackInput").value = id;
+  showPage("track");
+  trackComplaint();
+}
+
+function renderHomeStats() {
+  document.getElementById("homeTotal").textContent = publicComplaints.length;
+  document.getElementById("homeResolved").textContent = publicComplaints.filter(c => c.status === "RESOLVED").length;
+}
+
+// Analytics Dashboard
+async function loadAnalytics() {
+  try {
+    const a = await api("/admin/analytics");
+    document.getElementById("kTotal").textContent = a.totalComplaints;
+    document.getElementById("kOpen").textContent = a.openIssues;
+    document.getElementById("kRate").textContent = `${a.resolutionRate}%`;
+    document.getElementById("kTop").textContent = a.mostCommonProblem ? a.mostCommonProblem.category.replace("_", " ") : "No Data";
+    document.getElementById("insight").textContent = `${a.openIssues} active civic issues reported across villages. ${a.mostCommonProblem ? a.mostCommonProblem.category.replace("_", " ") + " is the primary reported category." : "No category patterns detected yet."}`;
+    document.getElementById("avgTime").textContent = a.averageResolutionHours !== null ? `${a.averageResolutionHours} Hours` : "No resolved data yet";
+  } catch(e) {
+    // Fallback from public complaints
+    const t = publicComplaints.length;
+    const o = publicComplaints.filter(c => c.status === "OPEN").length;
+    const r = publicComplaints.filter(c => c.status === "RESOLVED").length;
+    document.getElementById("kTotal").textContent = t;
+    document.getElementById("kOpen").textContent = o;
+    document.getElementById("kRate").textContent = t ? `${Math.round((r/t)*100)}%` : "0%";
+    document.getElementById("kTop").textContent = t ? publicComplaints[0].category.replace("_", " ") : "No Data";
+  }
+}
+
+// Admin Console Data
+async function loadAdminData() {
+  try {
+    const [deptRes, compRes] = await Promise.all([
+      api("/admin/departments"),
+      api("/complaints?limit=100")
+    ]);
+    departmentsList = deptRes.departments || [];
+    adminComplaints = compRes.complaints || [];
+    renderAdmin();
+  } catch(err) {
+    const el = document.getElementById("adminRows");
+    el.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:35px;color:var(--danger)">Sign in as an Admin or Officer to view live records (${esc(err.message)}).</td></tr>`;
+  }
+}
+
+function renderAdmin() {
+  const q = (document.getElementById("adminSearch").value || "").toLowerCase();
+  const s = document.getElementById("adminStatus").value;
+  
+  const filtered = adminComplaints.filter(c => {
+    const matchesQ = !q || [c.complaintId, c.village, c.location, c.description, c.category].join(" ").toLowerCase().includes(q);
+    const matchesS = !s || c.status === s;
+    return matchesQ && matchesS;
+  });
+  
+  const el = document.getElementById("adminRows");
+  if (!filtered.length) {
+    el.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:35px;color:var(--text-muted)">No complaints found in database.</td></tr>';
+    return;
+  }
+  
+  el.innerHTML = filtered.map(c => `
+    <tr>
+      <td><b style="font-family:monospace;">${esc(c.complaintId)}</b></td>
+      <td>${esc(c.category.replace("_", " "))}</td>
+      <td><b>${esc(c.village)}</b><br><small class="muted">${esc(c.location)}</small></td>
+      <td><span class="badge ${esc(c.priority)}">${esc(c.priority)}</span></td>
+      <td>
+        <select onchange="updateDepartment('${c.id}', this.value)" style="padding:6px; font-size:13px;">
+          <option value="">Select Dept</option>
+          ${departmentsList.map(d => `<option value="${d.id}" ${c.departmentId === d.id ? "selected" : ""}>${esc(d.name)}</option>`).join("")}
+        </select>
+      </td>
+      <td>
+        <select onchange="updateStatus('${c.id}', this.value)" style="padding:6px; font-size:13px;">
+          <option value="OPEN" ${c.status === "OPEN" ? "selected" : ""}>Open</option>
+          <option value="IN_PROGRESS" ${c.status === "IN_PROGRESS" ? "selected" : ""}>In Progress</option>
+          <option value="RESOLVED" ${c.status === "RESOLVED" ? "selected" : ""}>Resolved</option>
+        </select>
+      </td>
+      <td>
+        <button class="btn secondary" style="padding:6px 12px; font-size:12px;" onclick="showDetails('${c.id}')">View</button>
+      </td>
+    </tr>
+  `).join("");
+}
+
+async function updateStatus(id, newStatus) {
+  try {
+    await api(`/complaints/${id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus, note: `Status updated to ${newStatus}` })
+    });
+    await loadAdminData();
+    await refreshPublic();
+  } catch(err) {
+    alert("Failed to update status: " + err.message);
+  }
+}
+
+async function updateDepartment(id, departmentId) {
+  try {
+    await api(`/complaints/${id}/assign`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ departmentId })
+    });
+    await loadAdminData();
+  } catch(err) {
+    alert("Failed to assign department: " + err.message);
+  }
+}
+
+function showDetails(id) {
+  const c = adminComplaints.find(x => x.id === id);
+  if (!c) return;
+  
+  document.getElementById("modalContent").innerHTML = `
+    <div style="line-height:1.8;">
+      <p><b>Complaint ID:</b> <span style="font-family:monospace; font-weight:700;">${esc(c.complaintId)}</span></p>
+      <p><b>Citizen Name:</b> ${esc(c.citizen ? c.citizen.name : "Citizen")}</p>
+      <p><b>Mobile:</b> ${esc(c.citizen ? c.citizen.mobile : "N/A")}</p>
+      <p><b>Village:</b> ${esc(c.village)}</p>
+      <p><b>Location:</b> ${esc(c.location)}</p>
+      <p><b>Category:</b> ${esc(c.category.replace("_", " "))}</p>
+      <p><b>AI Priority:</b> <span class="badge ${esc(c.priority)}">${esc(c.priority)}</span></p>
+      <p><b>AI Sentiment:</b> ${esc(c.sentiment)}</p>
+      <p><b>Status:</b> <span class="badge ${esc(c.status)}">${esc(c.status.replace("_", " "))}</span></p>
+      <p style="margin-top:10px;"><b>Description:</b><br><div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">${esc(c.description)}</div></p>
+      <p style="margin-top:10px; font-size:12px; color:var(--text-muted);">Created: ${new Date(c.createdAt).toLocaleString()}</p>
+    </div>
+  `;
+  document.getElementById("detailModal").classList.add("show");
+}
+
+function closeModal() {
+  document.getElementById("detailModal").classList.remove("show");
+}
+
+document.getElementById("detailModal").addEventListener("click", e => {
+  if (e.target.id === "detailModal") closeModal();
+});
+document.getElementById("authModal").addEventListener("click", e => {
+  if (e.target.id === "authModal") closeAuthModal();
+});
+
+function exportData() {
+  const blob = new Blob([JSON.stringify({ version: 1, exportedAt: new Date().toISOString(), complaints: adminComplaints }, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `gramseva-export-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Startup
+(async function init() {
+  checkBackendHealth();
+  updateAuthUI();
+  await refreshPublic();
+})();
+</script>
+</body>
+</html>

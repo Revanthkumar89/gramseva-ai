@@ -1,0 +1,26 @@
+databases:
+  - name: gramseva-db
+    databaseName: gramseva_ai
+    user: postgres
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: gramseva-ai
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gramseva-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
