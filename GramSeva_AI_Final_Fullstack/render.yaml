@@ -1,7 +1,6 @@
 databases:
   - name: gramseva-db
     databaseName: gramseva_ai
-    user: postgres
     plan: free
     region: oregon
 
