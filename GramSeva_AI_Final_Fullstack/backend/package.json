@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "build": "prisma generate",
-    "db:deploy": "prisma db push && node prisma/seed.js",
-    "start": "prisma generate && prisma db push && node prisma/seed.js && node src/server.js",
+    "db:deploy": "prisma generate && prisma db push && node prisma/seed.js",
+    "start": "npm run db:deploy && node src/server.js",
     "server": "node src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",

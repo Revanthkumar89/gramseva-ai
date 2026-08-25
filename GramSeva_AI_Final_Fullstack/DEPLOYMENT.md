@@ -30,8 +30,17 @@ Render allows you to host the unified fullstack web service and a managed Postgr
 5. Click **Apply**.
 6. Render will automatically:
    - Provision PostgreSQL
-   - Run Prisma migrations & seed initial departments
+   - Initialize the Prisma schema and seed initial departments during the pre-deploy step
    - Deploy your web app with a free `https://gramseva-ai.onrender.com` URL!
+
+If deploying the web service manually instead of using the Blueprint, add these environment variables to the web service:
+
+- `DATABASE_URL`: use the database's **Internal Database URL** (not a local PostgreSQL URL)
+- `JWT_SECRET`: generate a strong random value
+- `JWT_EXPIRES_IN`: `7d`
+- `NODE_ENV`: `production`
+
+Set the commands to `cd backend && npm install && npm run build`, `cd backend && npm run db:deploy` as the pre-deploy command, and `cd backend && npm start` as the start command. The database and web service must be in the same Render region.
 
 ---
 

@@ -1,6 +1,7 @@
 databases:
   - name: gramseva-db
     databaseName: gramseva_ai
+    user: gramseva_user
     plan: free
     region: oregon
 
@@ -11,7 +12,9 @@ services:
     plan: free
     region: oregon
     buildCommand: cd backend && npm install && npm run build
+    preDeployCommand: cd backend && npm run db:deploy
     startCommand: cd backend && npm start
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
