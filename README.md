@@ -124,100 +124,7 @@ GramSeva_AI_Final_Fullstack/
 │   └── README.md
 │
 └── README.md
-Requirements
-Install the following software:
-Node.js 20 or later
-PostgreSQL 14 or later
-VS Code
-PostgreSQL Setup
-Open PostgreSQL or pgAdmin and create the database:
-CREATE DATABASE gramseva_ai;
-Backend Setup
-Open the VS Code terminal.
-Move into the backend directory:
-cd backend
-Install dependencies:
-npm install
-Environment Variables
-Create a file named:
-.env
-inside the backend folder.
-Add:
-PORT=5000
 
-NODE_ENV=development
-
-DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/gramseva_ai?schema=public"
-
-JWT_SECRET="CHANGE_THIS_TO_A_LONG_RANDOM_SECRET"
-
-JWT_EXPIRES_IN="7d"
-
-CORS_ORIGIN="http://127.0.0.1:5500,http://localhost:5500"
-Replace:
-YOUR_PASSWORD
-with your PostgreSQL password.
-Do not upload .env to GitHub.
-Prisma Setup
-Generate Prisma Client:
-npx prisma generate
-Create the database tables:
-npx prisma migrate dev --name init
-Seed the required departments:
-npm run seed
-The seed command creates departments only.
-No fake complaint data is added.
-Create Admin Account
-Run:
-npm run create-admin -- "GramSeva Admin" 9876543210 StrongPassword123
-Example:
-Name: GramSeva Admin
-Mobile: 9876543210
-Password: StrongPassword123
-Role: SUPER_ADMIN
-Keep your real admin password secure.
-Start Backend
-Run:
-npm run dev
-Backend will run at:
-http://localhost:5000
-Test Backend
-Open:
-http://localhost:5000/api/health
-You should receive a response similar to:
-{
-  "status": "ok",
-  "service": "GramSeva AI API",
-  "database": "connected"
-}
-Start Frontend
-Open a second VS Code terminal.
-Move to:
-cd frontend
-If you don't already have a static server:
-npx serve -l 5500
-Open:
-http://localhost:5500
-API Endpoints
-Authentication
-Register
-POST /api/auth/register
-Example:
-{
-  "name": "Citizen Name",
-  "mobile": "9876543210",
-  "password": "SecurePassword123",
-  "village": "Example Village"
-}
-Login
-POST /api/auth/login
-Example:
-{
-  "mobile": "9876543210",
-  "password": "SecurePassword123"
-}
-Current User
-GET /api/auth/me
 Requires:
 Authorization: Bearer YOUR_TOKEN
 Complaint APIs
@@ -245,6 +152,7 @@ GET /api/admin/analytics
 Departments:
 GET /api/admin/departments
 These endpoints require administrator authentication.
+
 AI Features
 The initial backend contains a rule-based AI service.
 The service can identify:
